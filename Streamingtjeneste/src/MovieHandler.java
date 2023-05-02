@@ -1,17 +1,22 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class MovieHandler {
 
-    private List<Movies> movies = readMoviesFromCSV("Movies.txt");
+    // database URL
+    static final String DB_URL = "jdbc:mysql://localhost/streaming";
+
+    //  Database credentials
+    static final String USER = "root";
+    static final String PASS = "123456";
+    private List<Movies> movies = readMoviesFromDatabase();
 
 
     public List<Movies> searchMovieByName(String movieName) {
@@ -34,41 +39,76 @@ public class MovieHandler {
         }
         return matchingMovies;
     }
-
-
-    /*public Movies getMovieByNumber(int number) {
-        return movies.get(number - 1);
-    }
-*/
-
-    private static List<Movies> readMoviesFromCSV(String fileName) {
+    private static List<Movies> readMoviesFromDatabase() {
         List<Movies> movies = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            //STEP 1: Register JDBC driver
+            Class.forName("com.mysql.jdbc.Driver");
 
-        Path pathToFile = Paths.get(fileName);
+            //STEP 2: Open a connection
+            System.out.println("Connecting to database...");
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
-        // create an instance of BufferedReader
-        // using try with resource, Java 7 feature to close resources
+            //STEP 3: Execute a query
+            System.out.println("Creating statement...");
+            String sql = "SELECT * FROM movies";
+            stmt = conn.prepareStatement(sql);
+
+            ResultSet rs = stmt.executeQuery();
+
+            //STEP 4: Extract data from result set
+            while (rs.next()) {
+                //Retrieve by column name
+                String name = rs.getString("Name");
+                String year = rs.getString("Year");
+                String category = rs.getString("category");
+                String rating = rs.getString("Rating");
+
+                //Create movie object and add to list
+                Movies movie = new Movies(name, year, category, rating);
+                movies.add(movie);
+            }
+
+            //STEP 5: Clean-up environment
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+        }//end try
+
+        return movies;
+    }
+/*
+   private static List<Movies> readMoviesFromCSV() {
+        List<Movies> movies = new ArrayList<>();
+        Path pathToFile = Paths.get("Movies.txt");
         try (BufferedReader br = Files.newBufferedReader(pathToFile,
                 StandardCharsets.US_ASCII)) {
-
-            // read the first line from the text file
             String line = br.readLine();
-
-            // loop until all lines are read
             while (line != null) {
-
-                // use string.split to load a string array with the values from
-                // each line of
-                // the file, using a comma as the delimiter
                 String[] parts = line.split(";");
-
                 Movies movie = createMovie(parts);
-
-                // adding book into ArrayList
                 movies.add(movie);
-
-                // read next line before looping
-                // if end of file reached, line would be null
                 line = br.readLine();
             }
 
@@ -79,6 +119,27 @@ public class MovieHandler {
         return movies;
     }
 
+*/
+
+    class MovieMenu {
+        public void displayMenu(Movies selectedMovie) {
+            Scanner scanner = new Scanner(System.in);
+
+            System.out.println("Choose between the following options:");
+            System.out.println("1. Save to favorite");
+            System.out.println("2. Play " + selectedMovie.getTitle());
+
+            String choice = scanner.nextLine();
+            if (choice.equals("1")) {
+                FileIO.saveMovieName(UserHandler.getName(),selectedMovie.getTitle()); // save movie to favorite movie list.
+            } else if (choice.equals("2")) {
+                System.out.println("You're now watching " + selectedMovie.getTitle());
+                FileIO.watchedMovieName(UserHandler.getName(),selectedMovie.getTitle());
+            } else {
+                System.out.println("Invalid choice. Please choose 1 or 2.");
+            }
+        }
+    }
     public void searchmovie() {
         MovieHandler movieHandler = new MovieHandler();
         Scanner scanner = new Scanner(System.in);
@@ -112,19 +173,8 @@ public class MovieHandler {
 
         // Call your function on selectedMovie here
         if (selectedMovies.getTitle().contains("")) {
-            System.out.println("Choose between the following options:");
-            System.out.println("1. Save to favorite");
-            System.out.println("2. Play " + selectedMovies.getTitle());
-
-            String choice = scanner.nextLine();
-            if (choice.equals("1")) {
-                FileIO.saveMovieName(selectedMovies.getTitle()); // save movie to favorite movie list.
-            } else if (choice.equals("2")) {
-                System.out.println("You're now watching " + selectedMovies.getTitle());
-                FileIO.watchedMovieName(selectedMovies.getTitle());
-            } else {
-                System.out.println("Invalid choice. Please choose 1 or 2.");
-            }
+            MovieMenu movieMenu = new MovieMenu();
+            movieMenu.displayMenu(selectedMovies);
         }
     }
 
@@ -161,19 +211,8 @@ public class MovieHandler {
 
         // Call your function on selectedMovie here
         if (selectedMovies.getTitle().contains("")) {
-            System.out.println("Choose between the following options:");
-            System.out.println("1. Save to favorite");
-            System.out.println("2. Play " + selectedMovies.getTitle());
-
-            String choice = scanner.nextLine();
-            if (choice.equals("1")) {
-                FileIO.saveMovieName(selectedMovies.getTitle()); // save movie to favorite movie list.
-            } else if (choice.equals("2")) {
-                System.out.println("You're now watching " + selectedMovies.getTitle());
-                FileIO.watchedMovieName(selectedMovies.getTitle());
-            } else {
-                System.out.println("Invalid choice. Please choose 1 or 2.");
-            }
+            MovieMenu movieMenu = new MovieMenu();
+            movieMenu.displayMenu(selectedMovies);
         }
     }
 
@@ -181,7 +220,7 @@ public class MovieHandler {
 
     public void showAllMovies() {
         Scanner movieScanner = new Scanner(System.in);
-        for (int i = 0; i < movies.size(); i++) {
+       for (int i = 0; i < movies.size(); i++) {
             Movies movie = movies.get(i);
             System.out.println((i + 1) + ". " + movies.get(i).getTitle());
         }
@@ -195,26 +234,15 @@ public class MovieHandler {
             return;
         }
 
-        Movies selectedMovie = movies.get(selection - 1);
-        System.out.println("Selected movie: " + selectedMovie.getTitle());
+        Movies selectedMovies = movies.get(selection - 1);
+        System.out.println("Selected movie: " + selectedMovies.getTitle());
 
-        if (selectedMovie.getTitle().contains("")) {
-            System.out.println("Choose between the following options:");
-            System.out.println("1. Save to favorite");
-            System.out.println("2. Play " + selectedMovie.getTitle());
-
-            String choice2 = movieScanner.nextLine();
-            if (choice2.equals("1")) {
-                FileIO.saveMovieName(selectedMovie.getTitle());
-            } else if (choice2.equals("2")) {
-                System.out.println("You're now watching " + selectedMovie.getTitle());
-                FileIO.watchedMovieName(selectedMovie.getTitle());
-            } else {
-                System.out.println("Invalid choice. Please choose 1 or 2.");
-            }
+        if (selectedMovies.getTitle().contains("")) {
+            MovieMenu movieMenu = new MovieMenu();
+            movieMenu.displayMenu(selectedMovies);
         }
     }
-
+/*
 
     private static Movies createMovie(String[] metadata) {
         String name = metadata[0];
@@ -234,6 +262,12 @@ public class MovieHandler {
             e.printStackTrace();
         }
     }
+    */
+
+
+
+
+
 }
 
 

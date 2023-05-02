@@ -7,7 +7,8 @@ import java.util.Scanner;
 public class Movies extends RollingPictures {
 
 
-    public Movies(String title, String year, String category, String rating) {
+    public Movies(String title, String year, String category, String rating)
+    {
         super(title, year, category, rating);
     }
 

@@ -3,21 +3,31 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UserHandler {
-    ArrayList<User> users;
+    static final String DB_URL = "jdbc:mysql://localhost/world";
+
+    //  Database credentials
+    static final String USER = "root";
+    static final String PASS = "123456";
+    ArrayList<User> users = new ArrayList<>();
     File file;
 
-    public UserHandler(String filename){
-        file = new File(filename);
-    }
+    private static String currentUser;
 
     public boolean login(String username, String password, String id) {
-        for(User user: users){
-            if(user.getName().equals(username) && user.getPassword().equals(password) )
+        if (username == null || password == null) {
+            return false;
+        }
+        for (User user : users) {
+            if (user.getName() != null && user.getPassword() != null
+                    && user.getName().equals(username) && user.getPassword().equals(password)) {
+                currentUser = user.getName();
                 return true;
+            }
         }
         return false;
     }
@@ -31,6 +41,7 @@ public class UserHandler {
         for(User user: users){
             if(user.getName().equals(username)) {
                 return false;
+
             }
         }
         users.add(new User(username, password, id));
@@ -40,31 +51,99 @@ public class UserHandler {
 
 
     public void loadUsers(){
+        Connection conn = null;
+        PreparedStatement stmt = null;
         try {
-            Scanner scanner = new Scanner(file);
-            while(scanner.hasNextLine()){
-                String input = scanner.nextLine();
-                String[] values = input.split(",");
-                users.add(new User(values[0], values[1], values[2]));
+            //STEP 1: Register JDBC driver
+            Class.forName("com.mysql.jdbc.Driver");
+
+            //STEP 2: Open a connection
+            System.out.println("Connecting to database loading users");
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            //STEP 3: Execute a query
+            System.out.println("Creating statement...");
+            String sql = "SELECT * FROM streaming.users";
+            stmt = conn.prepareStatement(sql);
+
+            ResultSet rs = stmt.executeQuery(sql);
+
+            //STEP 4: Extract data from result set
+            while (rs.next()) {
+                //Retrieve by column name
+
+                String username = rs.getString("UserName");
+                String password = rs.getString("Password");
+                String id = rs.getString("Id");
+                users.add(new User(username,password,id));
+
             }
-        }
-        catch (IOException e){
-            System.out.println("The system is not working currently");
-        }
+            //STEP 5: Clean-up environment
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+        }//end try
     }
 
     public void saveUsers() {
-        try{
-            FileWriter writer = new FileWriter(file);
+        //UserHandler userHandler = new UserHandler();
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try
+        {
+            //STEP 1: Register JDBC driver
+            Class.forName("com.mysql.jdbc.Driver");
+            //STEP 2: Open a connection
+            System.out.println("Connecting to database loading saveusers");
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            // the mysql insert statement
+            String sql = "INSERT INTO streaming.users (UserName,password) VALUES (?, ?)";
+
+            //INSERT INTO streaming.users (UserName,password) VALUES (?, ?)
+
+            // create the mysql insert preparedstatement
+            stmt = conn.prepareStatement(sql);
             for(User user:users){
-                writer.write(user.getName() + "," + user.getPassword() + "," + user.getId() + "\n");
+                stmt.setString ( 1,user.getName());
+                stmt.setString ( 2,user.getPassword());
             }
-            writer.close();
+
+            // execute the preparedstatement
+            stmt.executeUpdate();
+
+
+            conn.close();
+            DashBoard.setupDashboard();
         }
-        catch (IOException e){
-            System.out.println("Sorry, the system is not working currently");
+        catch (Exception e)
+        {
+            System.err.println("Got an exception!");
+            System.err.println(e.getMessage());
         }
+
     }
+
 
     public boolean isUserNameValid(String username) {
         if(username == null || username.length() > 20 || username.equals("")) {
@@ -82,6 +161,9 @@ public class UserHandler {
         else {
             return true;
         }
+    }
+    public static String getName() {
+        return currentUser;
     }
 
 

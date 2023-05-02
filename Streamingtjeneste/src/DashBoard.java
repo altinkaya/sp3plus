@@ -2,35 +2,37 @@
 public class DashBoard {
 
     //// Login Part
-    UserHandler userHandler = new UserHandler("users.txt");
-    TextUI textUI = new TextUI(userHandler);
-    MovieHandler movieHandler = new MovieHandler();
+    static UserHandler userHandler = new UserHandler();
+    static TextUI textUI = new TextUI(userHandler);
+    static MovieHandler movieHandler = new MovieHandler();
 
 
-    public void setupDashboard() {
+    public static void setupDashboard() {
 
         ////Dashboard
         String userChoice = textUI.startMenu();
-        while(true) {
+        while (true) {
             switch (userChoice) {
                 case "1":
                     movieHandler.searchmovie();
                     break;
+
                 case "2":
                     movieHandler.searchmoviecategory();
-                    //    MediaHandler.movieList();
                     break;
+
                 case "3":
-                    MovieHandler.movieList("WatchedMovies.txt");
+                    FileIO.GetwatchedMovieName();
                     break;
                 case "4":
-                    MovieHandler.movieList("Favorite.txt");
+                    FileIO.GetSavedMovieName();
                     break;
                 case "5":
                     movieHandler.showAllMovies();
                     break;
             }
             textUI.backToMenu();
+
         }
     }
 

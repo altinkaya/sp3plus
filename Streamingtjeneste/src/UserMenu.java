@@ -1,9 +1,9 @@
 public class UserMenu {
 
-    UserHandler userHandler = new UserHandler("users.txt");
+    UserHandler userHandler = new UserHandler();
     TextUI textUI = new TextUI(userHandler);
     public void setupUserMenu() {
-            userHandler.loadUsers();
+           userHandler.loadUsers();
 
             String userInput = textUI.getUserInput();
             switch (userInput) {
@@ -12,10 +12,12 @@ public class UserMenu {
                     break;
                 case "2":
                     textUI.createUserMenu();
+
+                    userHandler.saveUsers();
                     break;
                 default:
                     System.out.println("Goodbye");
             }
-            userHandler.saveUsers();
+          //  userHandler.saveUsers();
     }
 }

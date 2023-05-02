@@ -15,7 +15,7 @@ public class TextUI {
         System.out.println("Hello. Would you like to: " + "\n" + "1) Log in or" + "\n" + "2) Create user?" + "\n" + "Please write 1 or 2 and press Enter:");
         return scanner.nextLine();
     }
-
+    DashBoard dashBoard = new DashBoard();
     public void loginMenu() {
         System.out.println("Please enter your username: ");
         String userName = scanner.nextLine();
@@ -24,6 +24,7 @@ public class TextUI {
         String id = Integer.toString(counter()); ////(UUID.randomUUID().toString();)
         if(userHandler.login(userName, password, id)){
             System.out.println("Welcome " + userName);
+            dashBoard.setupDashboard();
         }
         else{
             System.out.println("Sorry, the username or password is incorrect");
@@ -40,6 +41,7 @@ public class TextUI {
         String id = Integer.toString(counter());
         if(userHandler.createUser(userName, password, id)){
             System.out.println("Welcome " + userName);
+
         }
         else{
             System.out.println("Sorry, the username or password can not be used try agin:");
@@ -63,7 +65,7 @@ public class TextUI {
         String choice = scanner.nextLine();
         switch (choice) {
             case "1":
-                startMenu();
+                DashBoard.setupDashboard();
                 break;
             case "2":
                 System.out.println("Closing the application...");
