@@ -1,0 +1,117 @@
+@startuml
+'https://plantuml.com/class-diagram
+!pragma layout smetana
+
+interface Media
+class Main
+class Movies
+class UserMenu
+class Dashboard
+class MovieHandler
+class UserHandler
+abstract RollingPictures
+class User
+
+
+class TextUI
+class FileIO
+
+
+Media : String getTitle()
+Media : int getYear()
+Media : int getCategory()
+Media : int getRating()
+
+Main : + static void main(string [] args)
+
+Movies : ArrayList<Movies>
+Movies : + Movies(String title, String year, String category, String rating, String fileName)
+Movies : + toString()
+
+
+UserMenu : UserHandler userHandler = new UserHandler("users.txt")
+UserMenu : TextUI textUI = new TextUI(userHandler)
+UserMenu : + setupUserMenu()
+
+
+Dashboard : UserHandler userHandler = new UserHandler("users.txt")
+Dashboard : TextUI textUI = new TextUI(userHandler);
+Dashboard : MovieHandler movieHandler = new MovieHandler();
+Dashboard : + setupDashboard()
+
+MovieHandler : - List<Movies>
+MovieHandler : + searchMovieByName(String movieName)
+MovieHandler : + searchMovieBycategory(String movieName)
+MovieHandler : + readMoviesFromCSV(String fileName)
+MovieHandler : + searchmovie()
+MovieHandler : + searchmoviecategory()
+MovieHandler : + showAllMovies()
+MovieHandler : + createMovie(String[] metadata)
+MovieHandler : + movieList(String filePath)
+
+UserMenu *-- UserHandler
+
+UserHandler : ArrayList<User> users
+UserHandler : File file
+UserHandler : + UserHandler(String filename)
+UserHandler : + login(String username, String password, String id)
+UserHandler : + createUser(String username, String password, String id)
+UserHandler : + loadUsers()
+UserHandler : + saveUsers()
+UserHandler : + isUserNameValid(String username)
+UserHandler : + isValid(String password)
+
+UserHandler *-- User
+
+User : - String name;
+User : - String password;
+User : - String id;
+User : + User(String name, String password, String id)
+User : + String getName()
+User : + String getPassword()
+User : + String getId()
+
+RollingPictures : - String title
+RollingPictures : - String year
+RollingPictures : - String category
+RollingPictures : - String rating
+RollingPictures : + RollingPictures(String title, String year,String category, String rating)
+RollingPictures : + RollingPictures(String fileName)
+RollingPictures : + getTitle()
+RollingPictures : + getYear()
+RollingPictures : + getCategory()
+RollingPictures : + getRating()
+RollingPictures : + toString()
+
+Main *-- UserMenu
+Main *-- Dashboard
+MovieHandler *-- Media
+Dashboard *-- MovieHandler
+Media *-- RollingPictures
+
+RollingPictures <|-- Movies
+
+
+Dashboard *-- TextUI
+UserMenu *-- TextUI
+
+TextUI : Scanner scan
+TextUI : UserHandler userHandler
+
+TextUI : + TextUI(UserHandler userHandler)
+TextUI : + String getUserInput()
+TextUI : + void loginMenu()
+TextUI : void createUserMenu()
+TextUI : + int counter()
+TextUI : + String startMenu()
+TextUI : + void backToMenu()
+
+Dashboard *-- FileIO
+
+FileIO : - static final String FILEPATH = "Favorite.txt";
+FileIO : - static final String FILEPATH2 = "WatchedMovies.txt";
+FileIO : + static void saveMovieName(String movieName)
+FileIO : + static void watchedMovieName(String movieName)
+
+
+@enduml

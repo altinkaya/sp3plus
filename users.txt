@@ -1,0 +1,5 @@
+Hans,Kaffekop,61
+Nicolai,Password,72
+Hugo,Password,67
+Hoggo,Password,75
+mustafa,12345678,15
