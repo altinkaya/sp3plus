@@ -19,3 +19,5 @@ null,The Shawshank Redemption
 null,The Shawshank Redemption
 kim,Casablanca
 null,The Shawshank Redemption
+mustafa,Dr. Strangelove Or How I Learned To Stop Worrying And Love The Bomb
+mustafa,The Bridge Over The River Kwai
