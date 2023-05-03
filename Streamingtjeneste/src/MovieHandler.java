@@ -131,7 +131,8 @@ public class MovieHandler {
 
             String choice = scanner.nextLine();
             if (choice.equals("1")) {
-                FileIO.saveMovieName(UserHandler.getName(),selectedMovie.getTitle()); // save movie to favorite movie list.
+                System.out.println("Movie is saved:" + selectedMovie.getTitle());
+                FileIO.saveMovieName(UserHandler.getId(),selectedMovie.getTitle()); // save movie to favorite movie list.
             } else if (choice.equals("2")) {
                 System.out.println("You're now watching " + selectedMovie.getTitle());
                 FileIO.watchedMovieName(UserHandler.getName(),selectedMovie.getTitle());
