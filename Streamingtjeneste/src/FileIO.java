@@ -30,7 +30,7 @@ public class FileIO {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
             // the mysql insert statement
-            String sql = "INSERT INTO streaming.SavedMovies (UserID,Moviename) VALUES (?, ?)";
+            String sql = "INSERT INTO streaming.SavedMovies (UserID,MovieID) VALUES (?, ?)";
 
             //INSERT INTO streaming.users (UserName,password) VALUES (?, ?)
 
@@ -118,7 +118,7 @@ public class FileIO {
                 String moviesID = rs.getString("MoviesID");
 
                     if (UserHandler.getId().equals(userID)) {
-                       System.out.println(userID + "," + moviesID);
+                       System.out.println(moviesID);
                     }
             }
             //STEP 5: Clean-up environment
@@ -174,7 +174,7 @@ public class FileIO {
                     String movieID = rs.getString("MovieID");
 
                     if (UserHandler.getId().equals(userID)) {
-                        System.out.println(userID + "," + movieID);
+                        System.out.println(movieID);
                     }
                 }
                 //STEP 5: Clean-up environment
