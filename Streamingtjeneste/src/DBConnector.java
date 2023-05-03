@@ -5,11 +5,11 @@ import java.util.List;
 public class DBConnector {
 
     // database URL
-    static final String DB_URL = "jdbc:mysql://localhost/world";
+    static final String DB_URL = "jdbc:mysql://localhost/streaming";
 
     //  Database credentials
     static final String USER = "root";
-    static final String PASS = "Dat-0501.";
+    static final String PASS = "123456";
 
 
     public void readData() {

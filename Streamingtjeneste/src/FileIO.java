@@ -8,11 +8,11 @@ import java.io.File;
 
 public class FileIO {
 
-    static final String DB_URL = "jdbc:mysql://localhost/world";
+    static final String DB_URL = "jdbc:mysql://localhost/streaming";
 
     //  Database credentials
     static final String USER = "root";
-    static final String PASS = "Dat-0501.";
+    static final String PASS = "123456";
     static ArrayList<User> users = new ArrayList<>();
     private static final String FILEPATH = "Favorite.txt";
     private static final String FILEPATH2 = "WatchedMovies.txt";
@@ -79,7 +79,7 @@ public class FileIO {
 
             //STEP 3: Execute a query
             System.out.println("Creating statement...");
-            String sql = "SELECT * FROM streaming.WatchedMovies";
+            String sql = "select * from movies join watchedmovies on movies.id=watchedmovies.moviesid";
             stmt = conn.prepareStatement(sql);
 
             ResultSet rs = stmt.executeQuery(sql);
@@ -89,10 +89,10 @@ public class FileIO {
                 //Retrieve by column name
 
                 String userID = rs.getString("UserID");
-                String moviesID = rs.getString("MoviesID");
+                String moviesID = rs.getString("name");
 
                     if (UserHandler.getId().equals(userID)) {
-                       System.out.println(userID + "," + moviesID);
+                       System.out.println(moviesID);
                     }
             }
             //STEP 5: Clean-up environment
