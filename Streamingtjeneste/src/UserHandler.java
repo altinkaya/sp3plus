@@ -12,7 +12,7 @@ public class UserHandler {
 
     //  Database credentials
     static final String USER = "root";
-    static final String PASS = "Dat-0501.";
+    static final String PASS = "123456";
     ArrayList<User> users = new ArrayList<>();
     File file;
 

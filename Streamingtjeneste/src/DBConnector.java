@@ -9,7 +9,7 @@ public class DBConnector {
 
     //  Database credentials
     static final String USER = "root";
-    static final String PASS = "Dat-0501.";
+    static final String PASS = "123456";
 
 
     public void readData() {

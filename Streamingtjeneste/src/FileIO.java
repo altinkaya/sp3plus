@@ -12,7 +12,7 @@ public class FileIO {
 
     //  Database credentials
     static final String USER = "root";
-    static final String PASS = "Dat-0501.";
+    static final String PASS = "123456";
     static ArrayList<User> users = new ArrayList<>();
     private static final String FILEPATH = "Favorite.txt";
     private static final String FILEPATH2 = "WatchedMovies.txt";
@@ -30,7 +30,7 @@ public class FileIO {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
             // the mysql insert statement
-            String sql = "INSERT INTO streaming.SavedMovies (UserID,MovieID) VALUES (?, ?)";
+            String sql = "INSERT INTO streaming.SavedMovies (UserID,MoviesID) VALUES (?, ?)";
 
             //INSERT INTO streaming.users (UserName,password) VALUES (?, ?)
 
@@ -66,7 +66,7 @@ public class FileIO {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
             // the mysql insert statement
-            String sql = "INSERT INTO streaming.WatchedMovies (userID,movieID) VALUES (?, ?)";
+            String sql = "INSERT INTO streaming.WatchedMovies (userID,moviesID) VALUES (?, ?)";
 
             //INSERT INTO streaming.users (UserName,password) VALUES (?, ?)
 
