@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UserHandler {
-    static final String DB_URL = "jdbc:mysql://localhost/world";
+    static final String DB_URL = "jdbc:mysql://localhost/Streaming";
 
     //  Database credentials
     static final String USER = "root";

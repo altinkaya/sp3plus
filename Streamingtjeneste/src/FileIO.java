@@ -8,7 +8,7 @@ import java.io.File;
 
 public class FileIO {
 
-    static final String DB_URL = "jdbc:mysql://localhost/world";
+    static final String DB_URL = "jdbc:mysql://localhost/Streaming";
 
     //  Database credentials
     static final String USER = "root";
@@ -18,7 +18,7 @@ public class FileIO {
     private static final String FILEPATH2 = "WatchedMovies.txt";
 
 
-    public static void saveMovieName(String UserID, String movieName) {
+    public static void saveMovieName(String UserID, String id) {
         Connection conn = null;
         PreparedStatement stmt = null;
         try
@@ -37,7 +37,7 @@ public class FileIO {
             // create the mysql insert preparedstatement
             stmt = conn.prepareStatement(sql);
                 stmt.setString ( 1,UserHandler.getId());
-                stmt.setString ( 2,movieName);
+                stmt.setString ( 2,id);
 
 
             // execute the preparedstatement
@@ -161,7 +161,7 @@ public class FileIO {
 
                 //STEP 3: Execute a query
                 System.out.println("Creating statement...");
-                String sql = "SELECT * FROM streaming.SavedMovies";
+                String sql = "select * from movies join savedmovies on movies.id=savedmovies.moviesid";
                 stmt = conn.prepareStatement(sql);
 
                 ResultSet rs = stmt.executeQuery(sql);
@@ -171,7 +171,7 @@ public class FileIO {
                     //Retrieve by column name
 
                     String userID = rs.getString("UserID");
-                    String movieID = rs.getString("MovieID");
+                    String movieID = rs.getString("name");
 
                     if (UserHandler.getId().equals(userID)) {
                         System.out.println(movieID);

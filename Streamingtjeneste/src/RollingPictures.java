@@ -10,16 +10,21 @@ public abstract class RollingPictures implements Media {
     private String category;
 
     private String rating;
+    private String id;
 
-    public RollingPictures(String title, String year,String category, String rating) {
+    public RollingPictures(String title, String year,String category, String rating,String id) {
         this.title = title;
         this.year = year;
         this.category = category;
         this.rating = rating;
+        this.id=id;
     }
 
     public String getTitle() {
         return title;
+    }
+    public String getId() {
+        return id;
     }
 
     public String getYear() {

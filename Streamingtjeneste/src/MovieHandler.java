@@ -65,9 +65,9 @@ public class MovieHandler {
                 String year = rs.getString("Year");
                 String category = rs.getString("category");
                 String rating = rs.getString("Rating");
-
+                String id = rs.getString("id");
                 //Create movie object and add to list
-                Movies movie = new Movies(name, year, category, rating);
+                Movies movie = new Movies(name, year, category, rating,id);
                 movies.add(movie);
             }
 
@@ -132,7 +132,7 @@ public class MovieHandler {
             String choice = scanner.nextLine();
             if (choice.equals("1")) {
                 System.out.println("Movie is saved:" + selectedMovie.getTitle());
-                FileIO.saveMovieName(UserHandler.getId(),selectedMovie.getTitle()); // save movie to favorite movie list.
+                FileIO.saveMovieName(UserHandler.getId(),selectedMovie.getId()); // save movie to favorite movie list.
             } else if (choice.equals("2")) {
                 System.out.println("You're now watching " + selectedMovie.getTitle());
                 FileIO.watchedMovieName(UserHandler.getName(),selectedMovie.getTitle());
