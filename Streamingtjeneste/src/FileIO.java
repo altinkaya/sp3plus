@@ -91,7 +91,7 @@ public class FileIO {
                 String userID = rs.getString("UserID");
                 String moviesID = rs.getString("MoviesID");
 
-                    if (User.getId.equals(userID)) {
+                    if (UserHandler.getId().equals(userID)) {
                        System.out.println(userID + "," + moviesID);
                     }
             }

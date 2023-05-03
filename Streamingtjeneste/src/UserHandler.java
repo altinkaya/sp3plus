@@ -17,6 +17,7 @@ public class UserHandler {
     File file;
 
     private static String currentUser;
+    private static String currentId;
 
     public boolean login(String username, String password, String id) {
         if (username == null || password == null) {
@@ -26,6 +27,7 @@ public class UserHandler {
             if (user.getName() != null && user.getPassword() != null
                     && user.getName().equals(username) && user.getPassword().equals(password)) {
                 currentUser = user.getName();
+                currentId = user.getId();
                 return true;
             }
         }
@@ -47,7 +49,6 @@ public class UserHandler {
         users.add(new User(username, password, id));
         return true;
     }
-
 
 
     public void loadUsers(){
@@ -164,5 +165,9 @@ public class UserHandler {
     public static String getName() {
         return currentUser;
     }
+    public static String getId() {
+        return currentId;
+    }
+
 
 }
