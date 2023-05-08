@@ -54,7 +54,7 @@ public class FileIO {
         }
     }
 
-    public static void watchedMovieName(String name, String movieName) {
+    public static void watchedMovieName(String UserID, String id) {
         Connection conn = null;
         PreparedStatement stmt = null;
         try
@@ -62,20 +62,18 @@ public class FileIO {
             //STEP 1: Register JDBC driver
             Class.forName("com.mysql.jdbc.Driver");
             //STEP 2: Open a connection
-            System.out.println("Connecting to database loading WatchedMovies");
+            System.out.println("Connecting to database loading saveusers");
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
             // the mysql insert statement
-            String sql = "INSERT INTO streaming.WatchedMovies (userID,moviesID) VALUES (?, ?)";
+            String sql = "INSERT INTO streaming.watchedmovies (UserID,MoviesID) VALUES (?, ?)";
 
-            //INSERT INTO streaming.users (UserName,password) VALUES (?, ?)
 
             // create the mysql insert preparedstatement
             stmt = conn.prepareStatement(sql);
-            for(User user:users){
-                stmt.setString ( 1,user.getName());
-                stmt.setString ( 2,user.getPassword());
-            }
+            stmt.setString ( 1,UserHandler.getId());
+            stmt.setString ( 2,id);
+
 
             // execute the preparedstatement
             stmt.executeUpdate();
@@ -100,12 +98,12 @@ public class FileIO {
             Class.forName("com.mysql.jdbc.Driver");
 
             //STEP 2: Open a connection
-            System.out.println("Connecting to database loading Watchedmovies");
+            System.out.println("Connecting to database loading SavedMovies");
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
             //STEP 3: Execute a query
             System.out.println("Creating statement...");
-            String sql = "SELECT * FROM streaming.WatchedMovies";
+            String sql = "select * from movies join watchedmovies on movies.id=watchedmovies.moviesid";
             stmt = conn.prepareStatement(sql);
 
             ResultSet rs = stmt.executeQuery(sql);
@@ -115,11 +113,11 @@ public class FileIO {
                 //Retrieve by column name
 
                 String userID = rs.getString("UserID");
-                String moviesID = rs.getString("MoviesID");
+                String movieID = rs.getString("name");
 
-                    if (UserHandler.getId().equals(userID)) {
-                       System.out.println(moviesID);
-                    }
+                if (UserHandler.getId().equals(userID)) {
+                    System.out.println(movieID);
+                }
             }
             //STEP 5: Clean-up environment
             rs.close();
@@ -144,6 +142,7 @@ public class FileIO {
             } catch (SQLException se) {
                 se.printStackTrace();
             }//end finally try
+
         }
     }
 

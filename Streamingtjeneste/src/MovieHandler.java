@@ -135,7 +135,7 @@ public class MovieHandler {
                 FileIO.saveMovieName(UserHandler.getId(),selectedMovie.getId()); // save movie to favorite movie list.
             } else if (choice.equals("2")) {
                 System.out.println("You're now watching " + selectedMovie.getTitle());
-                FileIO.watchedMovieName(UserHandler.getName(),selectedMovie.getTitle());
+                FileIO.watchedMovieName(UserHandler.getId(),selectedMovie.getId());
             } else {
                 System.out.println("Invalid choice. Please choose 1 or 2.");
             }
